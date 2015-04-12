@@ -1,0 +1,14 @@
+name: Lobby
+main: nmt.minecraft.Lobby.LobbyPlugin
+version: 0.65
+softdepend: 
+permissions:
+    LobbyAdmin:
+        default: op
+    LobbyPlayer:
+        default: true
+commands:
+    lobby:
+        permission: LobbyAdmin
+        usage: /lobby <Command> <Args>
+        description: This command is used to interact with the various commands within Lobby.
