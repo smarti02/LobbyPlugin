@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class LobbyCommands implements CommandExecutor{
-	private static String[] commandList = {"open", "close", "help"}; //if you change this remember to add it to the help function
+	private static String[] commandList = {"register","help"}; //if you change this remember to add it to the help function
 	
 	private String aquaChat = ChatColor.AQUA+"";
 	private String blueChat = ChatColor.BLUE+"";
@@ -49,6 +49,33 @@ public class LobbyCommands implements CommandExecutor{
 			sender.sendMessage("You must be a player to use this command!");
 			return false;
 		}
+		
+		if(args[0].equalsIgnoreCase("register")){
+			//lobby register [name]
+			if(args.length != 2){
+				sender.sendMessage("Wrong number of arguments: /lobby register [name]");
+				return false;
+			}
+			
+			registerLobby(sender,args[1]);
+		}
+		
 		return true;
+	}
+	
+	private void registerLobby(CommandSender sender, String lobbyName){
+		if(!(sender instanceof Player)){
+			return;
+		}
+		Player player = (Player) sender;
+		Lobby lobby = LobbyPlugin.lobbyPlugin.getLobby(lobbyName);
+		if(lobby != null){
+			sender.sendMessage(lobbyName+" is already a lobby");
+			return;
+		}
+		
+		LobbyPlugin.lobbyPlugin.getLogger().info("Creating new lobby: "+lobbyName);
+		LobbyPlugin.lobbyPlugin.newLobby(lobbyName,player.getLocation());
+		sender.sendMessage("Created new lobby called "+lobbyName);
 	}
 }

@@ -18,6 +18,7 @@ public class Lobby{
 	private String gameType;
 	private String gameMap;
 	private ArrayList<File> mapList;
+	private String lobbyName;
 	
 	Lobby(){
 		this.playerList = new ArrayList<LPlayer>();
@@ -87,12 +88,20 @@ public class Lobby{
 		this.lobbyLocation = lobby;
 	}
 	
+	public void setLobbyName(String name){
+		this.lobbyName = name;
+	}
+	
 	public Location getLobbyLocation(){
 		return this.lobbyLocation;
 	}
 	
 	public Location getExitLocation(){
 		return this.exitLocation;
+	}
+	
+	public String getName(){
+		return this.lobbyName;
 	}
 	
 	/**
