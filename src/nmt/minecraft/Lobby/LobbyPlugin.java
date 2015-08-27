@@ -31,28 +31,24 @@ public class LobbyPlugin extends JavaPlugin{
 		return lobbyList;
 	}
 	
-	public ArrayList<File> getMapList(String gameType){		
-		File current = LobbyPlugin.lobbyPlugin.getDataFolder();
-		File[] tmp = current.listFiles();
-		File gameTypeFolder=null;
-		ArrayList<File> mapList = new ArrayList<File>();
-		
-		for(int i=0; i<tmp.length;  i++){
-			if(tmp[i].getName().equalsIgnoreCase(gameType)){
-				gameTypeFolder = tmp[i];
+	public void addLobby(String name){
+		this.lobbyList.add(new Lobby(name));
+	}
+	
+	public void removeLobby(String name)
+	{
+		Lobby l = this.getLobby(name);
+		l.kickAll();
+		this.lobbyList.remove(l);
+	}
+	
+	public Lobby getLobby(String lobbyName){
+		for(Lobby lobby : this.lobbyList){
+			if(lobby.getName().equals(lobbyName)){
+				return lobby;
 			}
 		}
 		
-		if(gameTypeFolder == null || !gameTypeFolder.isDirectory()){
-			LobbyPlugin.lobbyPlugin.getLogger().info("Could not find the given gametype folder");
-			return null;
-		}
-		
-		File[] tmp2 = gameTypeFolder.listFiles();
-		for(int i=0; i<tmp2.length; i++){
-			mapList.add(tmp2[i]);
-		}
-		
-		return mapList;
+		return null;
 	}
 }

@@ -9,13 +9,35 @@ import org.bukkit.entity.Player;
 
 public class Lobby{
 	private List<LPlayer> playerList;
+	private String Name;
 	private Location exitLocation;
 	private Location lobbyLocation;
+	private Location exitButton;
+	private Location enterButton;
+	private boolean isRunning;
 	
-	Lobby(){
+	Lobby(String name){
 		this.playerList = new ArrayList<LPlayer>();
+		this.Name=name;
 		this.exitLocation = null;
 		this.lobbyLocation = null;
+		this.exitButton = null;
+		this.enterButton = null;
+		this.isRunning = false;
+	}
+	
+	public void toggleIsRunning(){
+		this.isRunning = !this.isRunning;
+	}
+	
+	public boolean getIsRunning(){
+		return this.isRunning;
+	}
+	
+	public void kickAll(){
+		for(LPlayer p : playerList){
+			this.removePlayer(p);
+		}
 	}
 	
 	/**
@@ -97,5 +119,29 @@ public class Lobby{
 	
 	public Location getExitLocation(){
 		return this.exitLocation;
+	}
+
+	public String getName() {
+		return Name;
+	}
+
+	public void setName(String name) {
+		Name = name;
+	}
+
+	public Location getExitButton() {
+		return exitButton;
+	}
+
+	public void setExitButton(Location exitButton) {
+		this.exitButton = exitButton;
+	}
+
+	public Location getEnterButton() {
+		return enterButton;
+	}
+
+	public void setEnterButton(Location enterButton) {
+		this.enterButton = enterButton;
 	}
 }

@@ -3,14 +3,15 @@ package nmt.minecraft.Lobby.IO;
 import java.util.Arrays;
 import java.util.List;
 
-import nmt.minecraft.Lobby.Lobby;
-import nmt.minecraft.Lobby.LobbyPlugin;
-
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import nmt.minecraft.Lobby.Lobby;
+import nmt.minecraft.Lobby.LobbyPlugin;
 
 public class LobbyCommands implements CommandExecutor{
 	private static String[] commandList = {"setEntrance", "setExit", "setentranceLocation", 
@@ -50,12 +51,14 @@ public class LobbyCommands implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+		Lobby tmpLobby=null;
 		
 		//All commands must be sent by a player
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("You must be a player to use this command!");
 			return false;
 		}
+		Location senderLocation = ((Player)sender).getLocation();
 
 		if(args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("help")== false)){
 			sender.sendMessage("Something went wrong... We need more arguments");
@@ -78,35 +81,84 @@ public class LobbyCommands implements CommandExecutor{
 		}
 		
 		else if(args[0].equalsIgnoreCase("setExitLocation")){
+			tmpLobby = LobbyPlugin.lobbyPlugin.getLobby(args[1]);
+			if(tmpLobby == null){
+				sender.sendMessage("Could not find lobby.");
+				return false;
+			}
 			
+			tmpLobby.setExitLocation(senderLocation);
+			sender.sendMessage("Set exit location to " + aquaChat + senderLocation.getBlockX() + " | "+senderLocation.getBlockY() +" | "+ senderLocation.getBlockZ()+resetChat);
 		}
 		
 		else if(args[0].equalsIgnoreCase("setEntranceLocation")){
+			tmpLobby = LobbyPlugin.lobbyPlugin.getLobby(args[1]);
+			if(tmpLobby == null){
+				sender.sendMessage("Could not find lobby.");
+				return false;
+			}
 			
+			tmpLobby.setLobbyLocation(senderLocation);
+			sender.sendMessage("Set entrance location to " + aquaChat + senderLocation.getBlockX() + " | "+senderLocation.getBlockY() +" | "+ senderLocation.getBlockZ()+resetChat);
 		}
 		
 		else if(args[0].equalsIgnoreCase("setExit")){
-			
+			tmpLobby = LobbyPlugin.lobbyPlugin.getLobby(args[1]);
+			if(tmpLobby == null){
+				sender.sendMessage("Could not find lobby.");
+				return false;
+			}
+			tmpLobby.setExitButton(senderLocation);
+			sender.sendMessage("Set exit button location to " + aquaChat + senderLocation.getBlockX() + " | "+senderLocation.getBlockY() +" | "+ senderLocation.getBlockZ()+resetChat);
 		}
 		
 		else if(args[0].equalsIgnoreCase("setEntrance")){
-			
+			tmpLobby = LobbyPlugin.lobbyPlugin.getLobby(args[1]);
+			if(tmpLobby == null){
+				sender.sendMessage("Could not find lobby.");
+				return false;
+			}
+			tmpLobby.setEnterButton(senderLocation);
+			sender.sendMessage("Set entrance button location to " + aquaChat + senderLocation.getBlockX() + " | "+senderLocation.getBlockY() +" | "+ senderLocation.getBlockZ()+resetChat);
 		}
 		
 		else if(args[0].equalsIgnoreCase("start")){
+			tmpLobby = LobbyPlugin.lobbyPlugin.getLobby(args[1]);
+			if(tmpLobby == null){
+				sender.sendMessage("Could not find lobby.");
+				return false;
+			}
 			
+			if(!tmpLobby.getIsRunning()){
+				tmpLobby.toggleIsRunning();
+				sender.sendMessage(args[1]+" lobby started");
+			}else{
+				sender.sendMessage(args[1]+" lobby already started");
+			}
 		}
 		
 		else if(args[0].equalsIgnoreCase("stop")){
-			
+			tmpLobby = LobbyPlugin.lobbyPlugin.getLobby(args[1]);
+			if(tmpLobby == null){
+				sender.sendMessage("Could not find lobby.");
+				return false;
+			}
+			if(tmpLobby.getIsRunning()){
+				tmpLobby.toggleIsRunning();
+				sender.sendMessage(args[1]+" lobby stopped");
+			}else{
+				sender.sendMessage(args[1]+" lobby already stopped");
+			}
 		}
 		
 		else if(args[0].equalsIgnoreCase("newLobby")){
-			
+			LobbyPlugin.lobbyPlugin.addLobby(args[1]);
+			sender.sendMessage("Added lobby "+args[1]);
 		}
 		
 		else if(args[0].equalsIgnoreCase("removeLobby")){
-			
+			LobbyPlugin.lobbyPlugin.removeLobby(args[1]);
+			sender.sendMessage("Removed Lobby "+args[1]);
 		}else{
 			sender.sendMessage("Something went wrong...");
 			sender.sendMessage("Valid commands are "+commandsToString()+"\n");
