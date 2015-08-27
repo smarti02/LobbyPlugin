@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class LobbyCommands implements CommandExecutor{
-	private static String[] commandList = {"open", "close", "help"}; //if you change this remember to add it to the help function
+	private static String[] commandList = {"setEntrance", "setExit", "setEnteranceLocation", "setExitLocation", "open", "close", "newLobby", "removeLobby", "help"}; //if you change this remember to add it to the help function	
 	
 	private String aquaChat = ChatColor.AQUA+"";
 	private String blueChat = ChatColor.BLUE+"";
@@ -23,11 +23,17 @@ public class LobbyCommands implements CommandExecutor{
 	private String boldChat = ChatColor.BOLD+"";
 	private String resetChat = ChatColor.RESET+"";
 	
-	
+	/**
+	 * @return the command list
+	 */
 	public static List<String> getCommandList(){
 		return Arrays.asList(commandList);
 	}
 	
+	/**
+	 * Turns the entire command list into a string separated by commas
+	 * @return a string with all commands
+	 */
 	public static String commandsToString(){
 		String tmp = "";
 		
@@ -49,6 +55,7 @@ public class LobbyCommands implements CommandExecutor{
 			sender.sendMessage("You must be a player to use this command!");
 			return false;
 		}
+		
 		return true;
 	}
 }
