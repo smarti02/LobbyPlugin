@@ -3,26 +3,16 @@ package nmt.minecraft.Lobby.IO;
 import java.util.Arrays;
 import java.util.List;
 
-import nmt.minecraft.Lobby.Lobby;
-import nmt.minecraft.Lobby.LobbyPlugin;
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import nmt.minecraft.Lobby.Lobby;
+import nmt.minecraft.Lobby.LobbyManager;
+
 public class LobbyCommands implements CommandExecutor{
-	private static String[] commandList = {"register","help"}; //if you change this remember to add it to the help function
-	
-	private String aquaChat = ChatColor.AQUA+"";
-	private String blueChat = ChatColor.BLUE+"";
-	private String goldChat = ChatColor.GOLD+"";
-	private String greenChat = ChatColor.GREEN+"";
-	private String redChat = ChatColor.RED+"";
-	private String boldChat = ChatColor.BOLD+"";
-	private String resetChat = ChatColor.RESET+"";
-	
+	private static String[] commandList = {"create", "setButton", "setLocation","open","close","info","help"}; //if you change this remember to add it to the help function
 	
 	public static List<String> getCommandList(){
 		return Arrays.asList(commandList);
@@ -43,39 +33,139 @@ public class LobbyCommands implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+		Lobby lobby;
+		if(args.length<2){
+			return false;
+		}
+		args[0] = args[0].toLowerCase();
+		switch(args[0]){
+		case "create":
+			if(LobbyManager.getLobby(args[1]) != null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("There is already a lobby with that name!"));
+				return true;
+			}
+			
+			if(LobbyManager.newLobby(args[1]) == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not create new lobby "+args[1]));
+				return true;
+			}
+			sender.sendMessage(ChatFormat.SUCCESS.wrap("Created new lobby "+args[1]));
+			
+			break;
+		case "setbutton":
+			// /lobby set [lobbyName]
+			
+			if(! (sender instanceof Player)){
+				ChatFormat.ERROR.wrap("You must be a player to run this command");
+				return true;
+			}
+			
+			lobby = LobbyManager.getLobby(args[1]); 
+			if( lobby == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find lobby: "+args[1]));
+			}
+			
+			if(!lobby.setButtonLocation(((Player)sender).getLocation())){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not set button location"));
+				return true;
+			}
+			sender.sendMessage(ChatFormat.SUCCESS.wrap("Set button location for "+args[1]+" at: "+LobbyManager.locationToString(lobby.getButtonLocation())));
+			
+			
+			break;
+		case "setexitbutton":
+			// /lobby set [lobbyName]
+			
+			if(! (sender instanceof Player)){
+				ChatFormat.ERROR.wrap("You must be a player to run this command");
+				return true;
+			}
+			
+			lobby = LobbyManager.getLobby(args[1]); 
+			if( lobby == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find lobby: "+args[1]));
+			}
+			
+			if(!lobby.setExitButtonLocation(((Player)sender).getLocation())){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not set exit button location"));
+				return true;
+			}
+			sender.sendMessage(ChatFormat.SUCCESS.wrap("Set exit button location for "+lobby.getName()+" at: "+LobbyManager.locationToString(lobby.getButtonLocation())));
+			
+			
+			break;
+		case "setlocation":
+			// /lobby set [lobbyName]
+			
+			if(! (sender instanceof Player)){
+				ChatFormat.ERROR.wrap("You must be a player to run this command");
+				return true;
+			}
+			
+			lobby = LobbyManager.getLobby(args[1]); 
+			if( lobby == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find lobby: "+args[1]));
+			}
+			
+			if(!lobby.setLocation(((Player)sender).getLocation())){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not set lobby location"));
+				return true;
+			}
+			sender.sendMessage(ChatFormat.SUCCESS.wrap("Set lobby location for "+lobby.getName()+" at: "+LobbyManager.locationToString(lobby.getButtonLocation())));
+			
+			
+			break;	
+			
+		case "open":
+			// /lobby open [lobbyName]
+			lobby = LobbyManager.getLobby(args[1]);
+			if(lobby == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find lobby: "+args[1]));
+				return true;
+			}
+			
+			if(lobby.getIsOpen()){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Lobby "+lobby.getName()+ " is already open."));
+				return true;
+			}
+			
+			if(!lobby.open()){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not open lobby "+lobby.getName()+" is not valid"));
+			}
+			
+			sender.sendMessage(ChatFormat.SUCCESS.wrap("Lobby "+lobby.getName()+" is now OPEN"));
+			
+			break;
+		case "close":
+			// /lobby open [lobbyName]
+			lobby = LobbyManager.getLobby(args[1]);
+			if(lobby == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find lobby: "+args[1]));
+				return true;
+			}
+			
+			if(!lobby.getIsOpen()){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Lobby "+lobby.getName()+ " is already closed."));
+				return true;
+			}
+						
+			lobby.close();
+			sender.sendMessage(ChatFormat.SUCCESS.wrap("Lobby "+lobby.getName()+" is now CLOSED"));
+						
+			break;
 		
-		//All commands must be sent by a player
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("You must be a player to use this command!");
+		case "info":
+			lobby = LobbyManager.getLobby(args[1]);
+			if(lobby == null){
+				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find lobby: "+args[1]));
+				return true;
+			}
+			sender.sendMessage(lobby.getInfo());
+			break;
+		default:
 			return false;
 		}
 		
-		if(args[0].equalsIgnoreCase("register")){
-			//lobby register [name]
-			if(args.length != 2){
-				sender.sendMessage("Wrong number of arguments: /lobby register [name]");
-				return false;
-			}
-			
-			registerLobby(sender,args[1]);
-		}
-		
 		return true;
-	}
-	
-	private void registerLobby(CommandSender sender, String lobbyName){
-		if(!(sender instanceof Player)){
-			return;
-		}
-		Player player = (Player) sender;
-		Lobby lobby = LobbyPlugin.lobbyPlugin.getLobby(lobbyName);
-		if(lobby != null){
-			sender.sendMessage(lobbyName+" is already a lobby");
-			return;
-		}
-		
-		LobbyPlugin.lobbyPlugin.getLogger().info("Creating new lobby: "+lobbyName);
-		LobbyPlugin.lobbyPlugin.newLobby(lobbyName,player.getLocation());
-		sender.sendMessage("Created new lobby called "+lobbyName);
 	}
 }

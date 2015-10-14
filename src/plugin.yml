@@ -10,5 +10,5 @@ permissions:
 commands:
     lobby:
         permission: LobbyAdmin
-        usage: /lobby <Command> <Args>
+        usage: /lobby <Command> <LobbyLocation>
         description: This command is used to interact with the various commands within Lobby.
