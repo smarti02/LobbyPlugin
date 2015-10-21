@@ -71,7 +71,6 @@ public class LobbyCommands implements CommandExecutor{
 			// /lobby close [lobbyName]
 			onClose(sender,args[1]);	
 			break;
-		
 		case "info":
 			//lobby info [lobbyName]
 			onInfo(sender,args[1]);
