@@ -15,10 +15,9 @@ public class Lobby {
 	private String name;
 	private Collection<LPlayer> players;
 	private Location buttonLocation;
+	private Location exitButtonLocation;
 	private Location lobbyLocation;
 	private boolean isOpen;
-	private Location exitButtonLocation;
-	
 	Lobby(String name){
 		this.name = name;
 		players = new LinkedList<LPlayer>();
@@ -42,24 +41,56 @@ public class Lobby {
 		return this.buttonLocation;
 	}
 	
+	public Location getExitButtonLocation() {
+		return this.exitButtonLocation;
+	}
+	
+	public Location getLocation() {
+		return this.lobbyLocation;
+	}
+
 	public boolean getIsOpen(){
 		return this.isOpen;
 	}
 	
 	public String getInfo(){
-		String str = this.name+System.lineSeparator();
-		str += ChatFormat.INFO.wrap("Button Location: ")+LobbyManager.locationToString(buttonLocation)+System.lineSeparator();
-		str += ChatFormat.INFO.wrap("Lobby Location: ")+LobbyManager.locationToString(lobbyLocation)+System.lineSeparator();
-		if(players.isEmpty()){
-			str += ChatFormat.WARNING.wrap("No Players in Lobby!")+System.lineSeparator();
+		String str = ChatFormat.INFO.wrap("Name: ")+this.name+"\n";
+		
+		str += ChatFormat.INFO.wrap("Is Valid: ");
+		if(this.isValid()){
+			str += ChatFormat.SUCCESS.wrap("true\n");
 		}else{
+			str += ChatFormat.ERROR.wrap("false\n");
+		}
+		
+		str += ChatFormat.INFO.wrap("Button Location: ")+LobbyManager.locationToString(buttonLocation)+ "\n";
+		str += ChatFormat.INFO.wrap("Lobby Location: ")+LobbyManager.locationToString(lobbyLocation)+ "\n";
+		str += ChatFormat.INFO.wrap("Exit Button Location: ")+LobbyManager.locationToString(exitButtonLocation)+ "\n";
+		
+		str += ChatFormat.INFO.wrap("Status: ");
+		if(this.isOpen==false){
+			str+= "CLOSED\n";
+		}else{
+			str+= "OPEN\n";
+		}
+		
+		if(players.isEmpty()){
+			str += ChatFormat.WARNING.wrap("No Players in Lobby!\n");
+		}else{
+			str += ChatFormat.INFO.wrap("Player List:\n");
 			for(LPlayer p : players){
-				str += p.getName()+System.lineSeparator();
+				str += p.getName()+ "\n";
 			}
 		}
 		return str;
 	}
 	
+	private boolean isValid() {
+		if(buttonLocation == null || exitButtonLocation == null || lobbyLocation == null)
+			return false;
+		return true;
+	}
+
 	/**
 	 * This is a boolean in case we want to add any restrictions later
 	 * @param location 
@@ -95,8 +126,7 @@ public class Lobby {
 	 * @return true if it was successful in opening the lobby
 	 */
 	public boolean open(){
-		if(this.buttonLocation == null ||this.exitButtonLocation == null
-				|| this.lobbyLocation == null || this.isOpen){
+		if(this.isValid() == false){
 			return false;
 		}
 		
@@ -167,4 +197,5 @@ public class Lobby {
 		
 		return null;
 	}
+
 }

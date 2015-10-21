@@ -6,7 +6,7 @@ import nmt.minecraft.Lobby.IO.LobbyCommands;
 import nmt.minecraft.Lobby.IO.LobbyTabCompleter;
 
 public class LobbyPlugin extends JavaPlugin{
-	public static LobbyPlugin plugin;
+	public static JavaPlugin plugin;
 	
 	@Override
 	public void onEnable() {

@@ -10,11 +10,7 @@ import org.bukkit.entity.Player;
 import nmt.minecraft.Lobby.IO.ChatFormat;
 
 public class LobbyManager {
-	private static Collection<Lobby> lobbies;
-
-	LobbyManager(){
-		lobbies = new LinkedList<Lobby>();
-	}
+	private static Collection<Lobby> lobbies = new LinkedList<Lobby>();
 	
 	/**
 	 * finds the lobby with the given name
