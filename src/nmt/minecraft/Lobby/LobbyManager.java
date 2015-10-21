@@ -81,4 +81,8 @@ public class LobbyManager {
 		return loc;
 		
 	}
+
+	public static void removeLobby(Lobby lobby) {
+		lobbies.remove(lobby);		
+	}
 }

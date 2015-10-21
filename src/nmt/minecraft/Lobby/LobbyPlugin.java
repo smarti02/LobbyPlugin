@@ -16,7 +16,15 @@ public class LobbyPlugin extends JavaPlugin{
 	
 	@Override
 	public void onDisable() {
+		if(LobbyManager.getLobbies().isEmpty()){
+			return;
+		}
 		
+		for(Lobby lobby : LobbyManager.getLobbies()){
+			lobby.close();
+			
+			LobbyManager.removeLobby(lobby);
+		}
 	}
 	
 	@Override
