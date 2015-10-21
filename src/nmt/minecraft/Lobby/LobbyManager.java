@@ -50,6 +50,10 @@ public class LobbyManager {
 		return null;
 	}
 
+	public static Collection<Lobby> getLobbies(){
+		return LobbyManager.lobbies;
+	}
+
 	/**
 	 * Creates a new lobby and adds it to the lobby list
 	 * @param lobbyName
@@ -81,6 +85,4 @@ public class LobbyManager {
 		return loc;
 		
 	}
-	
-	
 }

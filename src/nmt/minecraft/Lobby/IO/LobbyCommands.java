@@ -40,6 +40,7 @@ public class LobbyCommands implements CommandExecutor{
 		args[0] = args[0].toLowerCase();
 		switch(args[0]){
 		case "create":
+			// /lobby create [lobbyName]
 			if(LobbyManager.getLobby(args[1]) != null){
 				sender.sendMessage(ChatFormat.ERROR.wrap("There is already a lobby with that name!"));
 				return true;
@@ -50,7 +51,7 @@ public class LobbyCommands implements CommandExecutor{
 				return true;
 			}
 			sender.sendMessage(ChatFormat.SUCCESS.wrap("Created new lobby "+args[1]));
-			
+			Command.broadcastCommandMessage(sender,ChatFormat.SUCCESS.wrap("Created new lobby "+args[1]));
 			break;
 		case "setbutton":
 			// /lobby set [lobbyName]
@@ -74,7 +75,7 @@ public class LobbyCommands implements CommandExecutor{
 			
 			break;
 		case "setexitbutton":
-			// /lobby set [lobbyName]
+			// /lobby setExitButton [lobbyName]
 			
 			if(! (sender instanceof Player)){
 				ChatFormat.ERROR.wrap("You must be a player to run this command");
@@ -95,7 +96,7 @@ public class LobbyCommands implements CommandExecutor{
 			
 			break;
 		case "setlocation":
-			// /lobby set [lobbyName]
+			// /lobby setLocation [lobbyName]
 			
 			if(! (sender instanceof Player)){
 				ChatFormat.ERROR.wrap("You must be a player to run this command");
@@ -155,6 +156,7 @@ public class LobbyCommands implements CommandExecutor{
 			break;
 		
 		case "info":
+			//lobby info [lobbyName]
 			lobby = LobbyManager.getLobby(args[1]);
 			if(lobby == null){
 				sender.sendMessage(ChatFormat.ERROR.wrap("Could not find lobby: "+args[1]));
@@ -167,5 +169,9 @@ public class LobbyCommands implements CommandExecutor{
 		}
 		
 		return true;
+	}
+	
+	void sendToOps(String message){
+		
 	}
 }

@@ -145,8 +145,7 @@ public class Lobby {
 		}else if(clickLocation.equals(this.exitButtonLocation)){
 			//remove this player from the lobby
 			LPlayer player = getPlayer(e.getPlayer());
-			if(player != null){
-				e.getPlayer().sendMessage(ChatFormat.ERROR.wrap("You are not in a lobby: "));
+			if(player == null){
 				return;
 			}
 			player.restore();
