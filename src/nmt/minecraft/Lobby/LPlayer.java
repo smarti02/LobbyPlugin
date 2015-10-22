@@ -25,7 +25,9 @@ public class LPlayer {
 	 *gamemode
 	 */
 	
-	
+	/*
+	 * Preserving items is not currently working TODO 
+	 */
 	public LPlayer(Player player){
 		this.player = player;
 		//save all the information

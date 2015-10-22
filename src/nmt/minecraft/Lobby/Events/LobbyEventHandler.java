@@ -46,6 +46,7 @@ public class LobbyEventHandler implements Listener {
 		
 		//if the player is already in a lobby and they are trying to enter a bed, stop them
 		if(playerList.contains(player) && e.getClickedBlock().getType() == Material.BED){
+			player.sendMessage(ChatFormat.ERROR.wrap("YOU CANNOT SLEEP IN A BED!!!!!!"));
 			e.setCancelled(true);
 			return;
 		}
