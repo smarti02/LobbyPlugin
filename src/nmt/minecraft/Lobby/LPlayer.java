@@ -26,7 +26,7 @@ public class LPlayer {
 	 */
 	
 	
-	LPlayer(Player player){
+	public LPlayer(Player player){
 		this.player = player;
 		//save all the information
 		

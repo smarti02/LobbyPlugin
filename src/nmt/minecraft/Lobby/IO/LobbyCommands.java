@@ -257,7 +257,7 @@ public class LobbyCommands implements CommandExecutor{
 	}
 
 	void sendToOps(CommandSender sender, String message){
-		Command.broadcastCommandMessage(sender,ChatFormat.SESSION.wrap("Lobby ")+ChatFormat.TEAM.wrap(sender.getName()+": ")+message);
+		Command.broadcastCommandMessage(sender,ChatFormat.SESSION.wrap("Lobby ")+ChatFormat.TEAM.wrap(": ")+message);
 	}
 	
 }

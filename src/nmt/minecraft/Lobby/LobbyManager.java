@@ -7,10 +7,12 @@ import java.util.LinkedList;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import nmt.minecraft.Lobby.Events.LobbyEventHandler;
 import nmt.minecraft.Lobby.IO.ChatFormat;
 
 public class LobbyManager {
 	private static Collection<Lobby> lobbies = new LinkedList<Lobby>();
+	public static LobbyEventHandler handler = new LobbyEventHandler();
 	
 	/**
 	 * finds the lobby with the given name

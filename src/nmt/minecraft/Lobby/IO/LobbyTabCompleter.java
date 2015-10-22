@@ -28,7 +28,7 @@ public class LobbyTabCompleter implements TabCompleter{
 	}
 	/**
 	 * gets a list of lobby names as strings
-	 * @param lobbies The lobbys to look through
+	 * @param lobbies The lobbies to look through
 	 * @return
 	 */
 	private List<String> getNames(Collection<Lobby> lobbies){
@@ -67,7 +67,7 @@ public class LobbyTabCompleter implements TabCompleter{
 	}
 	
 	/**
-	 * Checks to see if the small string is at the begining of the big string
+	 * Checks to see if the small string is at the beginning of the big string
 	 * @param bigString
 	 * @param smallString
 	 * @return true if it is, false otherwise

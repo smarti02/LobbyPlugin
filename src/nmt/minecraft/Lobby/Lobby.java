@@ -3,17 +3,12 @@ package nmt.minecraft.Lobby;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import nmt.minecraft.Lobby.IO.ChatFormat;
 
-public class Lobby implements Listener {
+public class Lobby{
 	private String name;
 	private Collection<LPlayer> players;
 	private Location buttonLocation;
@@ -25,7 +20,6 @@ public class Lobby implements Listener {
 		this.name = name;
 		players = new LinkedList<LPlayer>();
 		this.isOpen = false;
-		Bukkit.getPluginManager().registerEvents(this, LobbyPlugin.plugin);
 	}
 	
 	@Override
@@ -154,49 +148,24 @@ public class Lobby implements Listener {
 		return true;
 	}
 	
-	@EventHandler
-	public void onInteract(PlayerInteractEvent e) {
-		if (e.isCancelled() || e.getClickedBlock() == null || e.getClickedBlock().getType() == Material.AIR) {
-			return;
+	public boolean addPlayer(LPlayer player){
+		if(this.isOpen == false){
+			player.getPlayer().sendMessage(ChatFormat.ERROR.wrap("Lobby is not yet open!"));
+			return false;
 		}
+				
+		players.add(player);
+		player.moveTo(lobbyLocation);
+		return true;
+	}
+	
+	public boolean removePlayer(Player player){
+		LPlayer play = this.getPlayer(player);
+		if(play == null)
+			return false;
 		
-		Location clickLocation =e.getClickedBlock().getLocation();
-		if (clickLocation.getBlock().equals(this.buttonLocation.getBlock())){
-			e.setCancelled(true);
-			
-			if(this.isOpen == false){
-				e.getPlayer().sendMessage(ChatFormat.ERROR.wrap("Lobby is not yet open!"));
-				return;
-			}
-			
-			//check if a player is already in another lobby
-			if(LobbyManager.getLobby(e.getPlayer())!=null){
-				e.getPlayer().sendMessage(ChatFormat.ERROR.wrap("You are already in a lobby"));
-				return;
-			}
-			
-			//add them to this lobby
-			LPlayer player = new LPlayer(e.getPlayer());
-			this.players.add(player);
-			
-			//teleport them to the lobby location
-			player.moveTo(lobbyLocation);
-			e.getPlayer().sendMessage(ChatFormat.SUCCESS.wrap("You have been added to the lobby: "+this.name));
-			
-		}else if(clickLocation.getBlock().equals(this.exitButtonLocation.getBlock())){
-			e.setCancelled(true);
-			//remove this player from the lobby
-			LPlayer player = getPlayer(e.getPlayer());
-			if(player == null){
-				e.getPlayer().sendMessage(ChatFormat.ERROR.wrap("You are not in the lobby"));
-				return;
-			}
-			player.restore();
-			players.remove(player);
-			e.getPlayer().sendMessage(ChatFormat.SUCCESS.wrap("You have been removed from the lobby: "+this.name));
-		}else{
-			System.out.println("THE EQUALS DID NOT WORK");
-		}
+		play.restore();
+		return players.remove(play);
 	}
 	
 	public LPlayer getPlayer(Player player){
